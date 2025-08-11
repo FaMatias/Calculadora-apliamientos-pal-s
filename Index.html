@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Apilamiento de Palés</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9e9e9;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Apilamiento de Palés</h1>
+
+        <div class="input-group">
+            <label for="palle-ancho">Ancho del palé (cm):</label>
+            <input type="number" id="palle-ancho" value="120" min="1">
+        </div>
+        <div class="input-group">
+            <label for="palle-largo">Largo del palé (cm):</label>
+            <input type="number" id="palle-largo" value="80" min="1">
+        </div>
+
+        <div class="input-group">
+            <label for="caja-ancho">Ancho de la caja (cm):</label>
+            <input type="number" id="caja-ancho" value="40" min="1">
+        </div>
+        <div class="input-group">
+            <label for="caja-largo">Largo de la caja (cm):</label>
+            <input type="number" id="caja-largo" value="60" min="1">
+        </div>
+        
+        <button onclick="calcularApilamiento()">Calcular</button>
+
+        <div id="resultado">
+            Ingresa las dimensiones y haz clic en "Calcular".
+        </div>
+    </div>
+
+    <script>
+        function calcularApilamiento() {
+            // Obtenemos los valores del usuario
+            const palleAncho = parseInt(document.getElementById('palle-ancho').value);
+            const palleLargo = parseInt(document.getElementById('palle-largo').value);
+            const cajaAncho = parseInt(document.getElementById('caja-ancho').value);
+            const cajaLargo = parseInt(document.getElementById('caja-largo').value);
+
+            // Validamos que los valores sean números positivos
+            if (palleAncho <= 0 || palleLargo <= 0 || cajaAncho <= 0 || cajaLargo <= 0) {
+                document.getElementById('resultado').innerText = "Por favor, ingresa dimensiones válidas (números mayores que cero).";
+                return;
+            }
+
+            // Calculamos el número de cajas que caben en cada orientación
+            const cajasOrientacion1 = Math.floor(palleAncho / cajaAncho) * Math.floor(palleLargo / cajaLargo);
+            const cajasOrientacion2 = Math.floor(palleAncho / cajaLargo) * Math.floor(palleLargo / cajaAncho);
+
+            // Elegimos la mejor opción
+            const maxCajas = Math.max(cajasOrientacion1, cajasOrientacion2);
+
+            let mensaje = "";
+            if (maxCajas === 0) {
+                mensaje = "Las cajas son demasiado grandes para el palé.";
+            } else {
+                mensaje = `En cada piso, puedes apilar hasta ${maxCajas} cajas.`;
+                
+                // Agregamos la recomendación de orientación
+                if (cajasOrientacion1 >= cajasOrientacion2) {
+                    mensaje += `\n\nRecomendación: Coloca el lado de ${cajaAncho} cm de la caja a lo largo del lado de ${palleAncho} cm del palé, y el lado de ${cajaLargo} cm de la caja a lo largo del lado de ${palleLargo} cm del palé.`;
+                } else {
+                    mensaje += `\n\nRecomendación: Coloca el lado de ${cajaLargo} cm de la caja a lo largo del lado de ${palleAncho} cm del palé, y el lado de ${cajaAncho} cm de la caja a lo largo del lado de ${palleLargo} cm del palé.`;
+                }
+            }
+
+            document.getElementById('resultado').innerText = mensaje;
+        }
+    </script>
+
+</body>
+</html>
